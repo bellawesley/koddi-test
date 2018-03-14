@@ -48,7 +48,7 @@ namespace KoddiTestApp.Controllers
                 {
                     db.Users.Add(user);
                     db.SaveChanges();
-                    message = "Account successfully created.";
+                    message = " Account successfully created.";
                     Status = true;
                 }
                 // End save data
@@ -75,7 +75,7 @@ namespace KoddiTestApp.Controllers
         // Login POST action
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(UserLogin userLogin, string ReturnUrl)
+        public ActionResult Login(UserLogin userLogin, string ReturnUrl="")
         {
             string message = "";
             using(MyDatabaseEntities db = new MyDatabaseEntities())
@@ -83,6 +83,7 @@ namespace KoddiTestApp.Controllers
                 var emailOverlap = db.Users.Where(a => a.EmailID == userLogin.EmailID).FirstOrDefault();
                 if (emailOverlap != null) // user exists and can login!
                 {
+                    //System.Diagnostics.Debug.Write("1");
                     if (string.Compare(Crypto.Hash(userLogin.Password), emailOverlap.Password) == 0) // password also valid
                     {
                         if (Url.IsLocalUrl(ReturnUrl))
@@ -92,7 +93,7 @@ namespace KoddiTestApp.Controllers
                         else
                         {
                             return RedirectToAction("Index", "Home");
-                        }
+                        } 
                     }
                     else // password invalid
                     {
@@ -107,11 +108,12 @@ namespace KoddiTestApp.Controllers
             }
 
             ViewBag.Message = message;
-            return View();
+            return View(); // return to login page
         }
 
         // Logout
         [Authorize]
+        [HttpPost]
         public ActionResult Logout()
         {
             FormsAuthentication.SignOut();
