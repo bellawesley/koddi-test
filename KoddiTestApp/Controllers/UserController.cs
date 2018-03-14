@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using KoddiTestApp.Models;
+using System.Net;
+using System.Web.Security;
 
 namespace KoddiTestApp.Controllers
 {
@@ -71,6 +73,42 @@ namespace KoddiTestApp.Controllers
         }
 
         // Login POST action
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Login(UserLogin userLogin, string ReturnUrl)
+        {
+            string message = "";
+            using(MyDatabaseEntities db = new MyDatabaseEntities())
+            {
+                var emailOverlap = db.Users.Where(a => a.EmailID == userLogin.EmailID).FirstOrDefault();
+                if (emailOverlap != null) // user exists and can login!
+                {
+                    if (string.Compare(Crypto.Hash(userLogin.Password), emailOverlap.Password) == 0) // password also valid
+                    {
+                        if (Url.IsLocalUrl(ReturnUrl))
+                        {
+                            return Redirect(ReturnUrl);
+                        }
+                        else
+                        {
+                            return RedirectToAction("Index", "Home");
+                        }
+                    }
+                    else // password invalid
+                    {
+                        message = "Invalid credential provided";
+                    }
+
+                }
+                else // user DNE
+                {
+                    message = "Invalid credential provided";
+                }
+            }
+
+            ViewBag.Message = message;
+            return View();
+        }
 
         // Logout
 
