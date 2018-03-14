@@ -111,6 +111,12 @@ namespace KoddiTestApp.Controllers
         }
 
         // Logout
+        [Authorize]
+        public ActionResult Logout()
+        {
+            FormsAuthentication.SignOut();
+            return RedirectToAction("Login", "User");
+        }
 
         [NonAction]
         public bool EmailExists(string emailID)
