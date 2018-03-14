@@ -83,9 +83,15 @@ namespace KoddiTestApp.Controllers
                 var emailOverlap = db.Users.Where(a => a.EmailID == userLogin.EmailID).FirstOrDefault();
                 if (emailOverlap != null) // user exists and can login!
                 {
-                    //System.Diagnostics.Debug.Write("1");
                     if (string.Compare(Crypto.Hash(userLogin.Password), emailOverlap.Password) == 0) // password also valid
                     {
+                        var ticket = new FormsAuthenticationTicket(userLogin.EmailID, false, 30);
+                        string encrypted = FormsAuthentication.Encrypt(ticket);
+                        var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encrypted);
+                        cookie.Expires = DateTime.Now.AddMinutes(30);
+                        cookie.HttpOnly = true;
+                        Response.Cookies.Add(cookie);
+                        
                         if (Url.IsLocalUrl(ReturnUrl))
                         {
                             return Redirect(ReturnUrl);
@@ -106,9 +112,8 @@ namespace KoddiTestApp.Controllers
                     message = "Invalid credential provided";
                 }
             }
-
             ViewBag.Message = message;
-            return View(); // return to login page
+            return View(); 
         }
 
         // Logout
@@ -118,6 +123,12 @@ namespace KoddiTestApp.Controllers
         {
             FormsAuthentication.SignOut();
             return RedirectToAction("Login", "User");
+        }
+
+        [Authorize]
+        public ActionResult Index()
+        {
+            return View();
         }
 
         [NonAction]
