@@ -16,7 +16,7 @@ namespace KoddiTestApp.Models
     {
         [Display(Name = "Email")]
         [DataType(DataType.EmailAddress)]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Email ID is required")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Email is required")]
         public string EmailID { get; set; }
 
         [DataType(DataType.Password)]

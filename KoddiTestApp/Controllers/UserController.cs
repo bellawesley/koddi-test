@@ -64,6 +64,11 @@ namespace KoddiTestApp.Controllers
         }
 
         // Login
+        [HttpGet]
+        public ActionResult Login()
+        {
+            return View();
+        }
 
         // Login POST action
 
