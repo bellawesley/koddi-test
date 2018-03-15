@@ -1,4 +1,4 @@
-# Koddi Dev Test : Twitter Clone
+# Dev Test : Twitter Clone
 
 A simple "Twitter Clone" in which users begin by registering/logging in. Users are directed to a page where they can post tweets and have the option to view their previous posts.
 
