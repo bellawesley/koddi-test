@@ -24,4 +24,4 @@ A simple "Twitter Clone" in which users begin by registering/logging in. Users a
 
 ## Solution by
 
-* Isabella Wesley
+* Isabella Wesley- bellawesley@yahoo.com
