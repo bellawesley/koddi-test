@@ -98,7 +98,7 @@ namespace KoddiTestApp.Controllers
                         }
                         else
                         {
-                            return RedirectToAction("Index", "Home");
+                            return RedirectToAction("Index", "User");
                         } 
                     }
                     else // password invalid
@@ -116,6 +116,31 @@ namespace KoddiTestApp.Controllers
             return View(); 
         }
 
+        [Authorize]
+        public ActionResult Index()
+        {
+            return View();
+        }
+        
+        //POST submit tweet
+        [HttpPost]
+        public ActionResult Index(Tweet myTweet)
+        {
+            if (ModelState.IsValid)
+            {
+                myTweet.UserName = User.Identity.Name;
+
+                using (MyDatabaseEntities db = new MyDatabaseEntities())
+                {
+                    db.Tweets.Add(myTweet);
+                    db.SaveChanges();
+                }
+                ModelState.Clear();
+                return View();
+            }
+            return View(myTweet);
+        }
+
         // Logout
         [Authorize]
         [HttpPost]
@@ -124,12 +149,7 @@ namespace KoddiTestApp.Controllers
             FormsAuthentication.SignOut();
             return RedirectToAction("Login", "User");
         }
-
-        [Authorize]
-        public ActionResult Index()
-        {
-            return View();
-        }
+        
 
         [NonAction]
         public bool EmailExists(string emailID)

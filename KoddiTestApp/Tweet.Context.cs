@@ -7,16 +7,16 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace KoddiTestApp.Models
+namespace KoddiTestApp
 {
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class MyDatabaseEntities : DbContext
+    public partial class MyDatabaseEntities1 : DbContext
     {
-        public MyDatabaseEntities()
-            : base("name=MyDatabaseEntities")
+        public MyDatabaseEntities1()
+            : base("name=MyDatabaseEntities1")
         {
         }
     
@@ -25,7 +25,7 @@ namespace KoddiTestApp.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Tweet> Tweets { get; set; }
+        public virtual DbSet<User> Users { get; set; }
     }
 }

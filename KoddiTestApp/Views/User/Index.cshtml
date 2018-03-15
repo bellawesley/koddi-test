@@ -1,0 +1,37 @@
+﻿@model KoddiTestApp.Models.Tweet
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+Welcome @HttpContext.Current.User.Identity.Name
+
+@if (Request.IsAuthenticated)
+{
+using (Html.BeginForm()) {
+
+<div class="form-horizontal">
+    <hr />
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Note, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.TextAreaFor(model => model.Note, 5, 150, new { placeholder = "Enter your tweet here!", htmlAttributes = new {@class = "form-control"} })
+            @Html.ValidationMessageFor(model => model.Note, "", new { @class = "text-danger" })
+        </div>
+        <br />
+        <div class="col-md-offset-2 col-md-10" style="padding-top:12px;">
+            <input type="submit" value="Send tweet" class="btn btn-default" />
+        </div>
+    </div>
+</div>
+
+}
+
+    using (Html.BeginForm("Logout", "User", FormMethod.Post, new { id = "logoutForm" })) {
+<a href="javascript:document.getElementById('logoutForm').submit()">Logout</a>
+    }
+
+}
