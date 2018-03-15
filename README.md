@@ -18,6 +18,8 @@ A simple "Twitter Clone" in which users begin by registering/logging in. Users a
 
 ## Database Schema
 
+* As objects, Users have a one-to-many relationship with Tweets
+
 ## Solution by
 
 * Isabella Wesley
