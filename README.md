@@ -20,6 +20,8 @@ A simple "Twitter Clone" in which users begin by registering/logging in. Users a
 
 * As objects, Users have a one-to-many relationship with Tweets
 
+![alt text](http://i65.tinypic.com/2uo6zk7.jpg)
+
 ## Solution by
 
 * Isabella Wesley
