@@ -6,6 +6,7 @@ using System.Web;
 
 namespace KoddiTestApp.Models
 {
+    // User login model.
     public class UserLogin
     {
         [Display(Name = "Email")]

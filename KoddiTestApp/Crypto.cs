@@ -8,6 +8,7 @@ namespace KoddiTestApp
 {
     public static class Crypto
     {
+        //Hashing security for user passwords.
         public static string Hash(string value)
         {
             return Convert.ToBase64String(

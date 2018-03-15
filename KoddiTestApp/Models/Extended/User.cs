@@ -7,6 +7,8 @@ using System.ComponentModel.DataAnnotations;
 namespace KoddiTestApp.Models
 {
     [MetadataType(typeof(UserMetadata))]
+
+    // Partial class of User model. Here, data annotation validators validate the model.
     public partial class User
     {
         public string ConfirmPassword { get; set; } // (Additional field, not in MyDatabase)

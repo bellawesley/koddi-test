@@ -7,6 +7,8 @@ using System.ComponentModel.DataAnnotations;
 namespace KoddiTestApp.Models
 {
     [MetadataType(typeof(TweetMetadata))]
+
+    // Partial class of Tweet model. Here, data annotation validators validate the model by limiting character count per tweet.
     public partial class Tweet
     {
     }

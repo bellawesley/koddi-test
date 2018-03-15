@@ -9,10 +9,9 @@ using System.Web.Security;
 
 namespace KoddiTestApp.Controllers
 {
-
     public class UserController : Controller
     {
-        // Declare frequented database
+        // Declare frequented database for reuse
         MyDatabaseEntities db = new MyDatabaseEntities();
 
         // Registration action
@@ -44,7 +43,7 @@ namespace KoddiTestApp.Controllers
                 // Password hashing
                 user.Password = Crypto.Hash(user.Password);
                 user.ConfirmPassword = Crypto.Hash(user.ConfirmPassword);
-
+                MyDatabaseEntities db = new MyDatabaseEntities();
                 // Save data to database if applicable
                 using (db)
                 {
@@ -53,7 +52,6 @@ namespace KoddiTestApp.Controllers
                     message = " Account successfully created.";
                     Status = true;
                 }
-
             }
             else
             {
@@ -82,10 +80,11 @@ namespace KoddiTestApp.Controllers
             using(db)
             {
                 var emailOverlap = db.Users.Where(a => a.EmailID == userLogin.EmailID).FirstOrDefault();
-                if (emailOverlap != null) // user exists and can login!
+                if (emailOverlap != null) // User exists in data
                 {
-                    if (string.Compare(Crypto.Hash(userLogin.Password), emailOverlap.Password) == 0) // password also valid
+                    if (string.Compare(Crypto.Hash(userLogin.Password), emailOverlap.Password) == 0) // Password valid
                     {
+                        // Create ticket for user authentication. Timeout = 30 minutes
                         var ticket = new FormsAuthenticationTicket(userLogin.EmailID, false, 30);
                         string encrypted = FormsAuthentication.Encrypt(ticket);
                         var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encrypted);
@@ -102,13 +101,13 @@ namespace KoddiTestApp.Controllers
                             return RedirectToAction("Index", "User");
                         } 
                     }
-                    else // password invalid
+                    else // Password invalid
                     {
                         message = "Invalid credential provided";
                     }
 
                 }
-                else // user DNE
+                else // User DNE
                 {
                     message = "Invalid credential provided";
                 }
@@ -117,37 +116,38 @@ namespace KoddiTestApp.Controllers
             return View(); 
         }
 
+        // Tweet portal
         [Authorize]
         public ActionResult Index()
         {
             return View();
         }
         
-        // POST submit tweet
+        // POST Tweet posting
         [HttpPost]
         public ActionResult Index(Tweet myTweet)
         {
             if (ModelState.IsValid)
             {
-                myTweet.UserName = User.Identity.Name;
+                myTweet.UserName = User.Identity.Name; // Each tweet is saved in DB with current user ID
 
                 using (db)
                 {
-                    db.Tweets.Add(myTweet);
+                    db.Tweets.Add(myTweet); // Add tweet to DB
                     db.SaveChanges();
                 }
-                ModelState.Clear();
+                ModelState.Clear(); // Clear textbox if tweet met criteria and was added to DB
                 return View();
             }
             return View(myTweet);
         }
 
-        // See tweets
+        // POST View tweets
         [Authorize]
         [HttpPost]
         public ActionResult Log()
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid) // List is produced based on current user. Most recent tweets at top
             {
                 return View(db.Tweets.ToList().Where(a => a.UserName == User.Identity.Name).Reverse());
             }
@@ -157,7 +157,7 @@ namespace KoddiTestApp.Controllers
             }
         }
 
-        // Logout
+        // POST Logout action
         [Authorize]
         [HttpPost]
         public ActionResult Logout()
@@ -166,14 +166,14 @@ namespace KoddiTestApp.Controllers
             return RedirectToAction("Login", "User");
         }
         
-
+        // Email pre-existance method
         [NonAction]
         public bool EmailExists(string emailID)
         {
             using (db)
             {
                 var emailOverlap = db.Users.Where(a => a.EmailID == emailID).FirstOrDefault();
-                return emailOverlap == null ? false : true; // return false if no overlap (email does not exist)
+                return emailOverlap == null ? false : true; // Return false if no overlap (email does not exist)
             }
         }
     }

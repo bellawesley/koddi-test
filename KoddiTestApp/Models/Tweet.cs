@@ -11,7 +11,8 @@ namespace KoddiTestApp.Models
 {
     using System;
     using System.Collections.Generic;
-    
+
+    //Single Tweet model. Status ID ascends automatically. UserName is pulled from current user.
     public partial class Tweet
     {
         public int StatusID { get; set; }

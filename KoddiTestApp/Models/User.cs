@@ -11,7 +11,8 @@ namespace KoddiTestApp.Models
 {
     using System;
     using System.Collections.Generic;
-    
+
+    // User model.
     public partial class User
     {
         public int UserID { get; set; }
