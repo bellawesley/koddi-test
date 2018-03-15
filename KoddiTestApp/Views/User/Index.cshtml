@@ -4,7 +4,7 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>Post a Tweet</h2>
 
 Welcome @HttpContext.Current.User.Identity.Name
 
@@ -30,8 +30,11 @@ using (Html.BeginForm()) {
 
 }
 
+    using (Html.BeginForm("Log", "User", FormMethod.Post, new { @class="btn btn-default", id = "logForm" })) {
+<a href="javascript:document.getElementById('logForm').submit()" style="text-decoration: none; color:black">View your previous posts</a>
+    }
+<br><br />
     using (Html.BeginForm("Logout", "User", FormMethod.Post, new { id = "logoutForm" })) {
 <a href="javascript:document.getElementById('logoutForm').submit()">Logout</a>
     }
-
 }

@@ -1,0 +1,24 @@
+﻿@model IEnumerable<KoddiTestApp.Models.Tweet>
+
+@{
+    ViewBag.Title = "Log";
+}
+
+<h2>Your previous posts</h2>
+<br />
+
+@Html.ActionLink("Post a new tweet", "Index", null, new { @class = "btn btn-default" })
+<br><br/>
+
+<table class="table">
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Note)
+            </td>
+        </tr>
+    }
+
+</table>

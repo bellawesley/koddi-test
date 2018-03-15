@@ -9,8 +9,12 @@ using System.Web.Security;
 
 namespace KoddiTestApp.Controllers
 {
+
     public class UserController : Controller
     {
+        // Declare frequented database
+        MyDatabaseEntities db = new MyDatabaseEntities();
+
         // Registration action
         [HttpGet]
         public ActionResult Registration()
@@ -29,29 +33,26 @@ namespace KoddiTestApp.Controllers
             // Model Validation
             if (ModelState.IsValid)
             {
-                // Email exist already check
+                // Check if email exists already
                 var IsExist = EmailExists(user.EmailID);
                 if (IsExist)
                 {
                     ModelState.AddModelError("EmailExists", "Email already exists");
                     return View(user);
                 }
-                // End email exist check
 
                 // Password hashing
                 user.Password = Crypto.Hash(user.Password);
                 user.ConfirmPassword = Crypto.Hash(user.ConfirmPassword);
-                // End password hashing
 
-                // Save data to DB
-                using (MyDatabaseEntities db =  new MyDatabaseEntities())
+                // Save data to database if applicable
+                using (db)
                 {
                     db.Users.Add(user);
                     db.SaveChanges();
                     message = " Account successfully created.";
                     Status = true;
                 }
-                // End save data
 
             }
             else
@@ -78,7 +79,7 @@ namespace KoddiTestApp.Controllers
         public ActionResult Login(UserLogin userLogin, string ReturnUrl="")
         {
             string message = "";
-            using(MyDatabaseEntities db = new MyDatabaseEntities())
+            using(db)
             {
                 var emailOverlap = db.Users.Where(a => a.EmailID == userLogin.EmailID).FirstOrDefault();
                 if (emailOverlap != null) // user exists and can login!
@@ -122,7 +123,7 @@ namespace KoddiTestApp.Controllers
             return View();
         }
         
-        //POST submit tweet
+        // POST submit tweet
         [HttpPost]
         public ActionResult Index(Tweet myTweet)
         {
@@ -130,7 +131,7 @@ namespace KoddiTestApp.Controllers
             {
                 myTweet.UserName = User.Identity.Name;
 
-                using (MyDatabaseEntities db = new MyDatabaseEntities())
+                using (db)
                 {
                     db.Tweets.Add(myTweet);
                     db.SaveChanges();
@@ -139,6 +140,21 @@ namespace KoddiTestApp.Controllers
                 return View();
             }
             return View(myTweet);
+        }
+
+        // See tweets
+        [Authorize]
+        [HttpPost]
+        public ActionResult Log()
+        {
+            if (ModelState.IsValid)
+            {
+                return View(db.Tweets.ToList().Where(a => a.UserName == User.Identity.Name).Reverse());
+            }
+            else
+            {
+                return RedirectToAction("Login", "User");
+            }
         }
 
         // Logout
@@ -154,7 +170,7 @@ namespace KoddiTestApp.Controllers
         [NonAction]
         public bool EmailExists(string emailID)
         {
-            using (MyDatabaseEntities db = new MyDatabaseEntities())
+            using (db)
             {
                 var emailOverlap = db.Users.Where(a => a.EmailID == emailID).FirstOrDefault();
                 return emailOverlap == null ? false : true; // return false if no overlap (email does not exist)
