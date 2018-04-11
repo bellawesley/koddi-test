@@ -13,6 +13,7 @@ A simple "Twitter Clone" in which users begin by registering/logging in. Users a
 ## Deployed solution
 
 kodditestapp.azurewebsites.net/
+*NO LONGER BEING SERVED as of 4/8/18*
 
 ## Solution built with
 
